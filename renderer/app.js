@@ -423,8 +423,7 @@ function renderCurrentPeriod() {
   const counted = period.subjects.filter(
     (s) => !s.excluded && s.average !== null
   ).length;
-  const total = period.subjects.filter((s) => s.average !== null).length;
-  statCount.textContent = counted === total ? String(counted) : `${counted}/${total}`;
+  statCount.textContent = String(counted);
 
   renderChart(period);
 
