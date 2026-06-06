@@ -60,7 +60,11 @@ EcoleDirecte API.
 
 ## License
 
-Copyright (c) 2026 dev-zsm. All Rights Reserved. See [LICENSE.md](LICENSE.md).
+Copyright (c) 2026 dev-zsm. Source-available, all rights reserved.
+
+You may view, clone, build, and modify the software for personal use, and submit
+pull requests. Redistribution, republishing, and commercial use are not allowed.
+See [LICENSE.md](LICENSE.md) for the full terms.
 
 MoyenneED Desktop is an independent project, not affiliated with EcoleDirecte.
 

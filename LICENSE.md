@@ -1,37 +1,54 @@
 # Licence — MoyenneED Desktop
 
-**Copyright © 2026 dev-zsm. Tous droits réservés. (All Rights Reserved)**
+**Copyright © 2026 dev-zsm. Tous droits réservés.**
 
 GitHub : https://github.com/dev-zsm
 
+Ce projet est **à code ouvert mais non libre** (source-available). Le code est
+public et consultable, mais il reste la propriété de son auteur. Les conditions
+ci-dessous précisent ce qui est autorisé.
+
 ---
 
-## Conditions
+## Ce que vous POUVEZ faire
 
-Ce logiciel et son code source (« le Logiciel ») sont la propriété exclusive de
-son auteur, **dev-zsm**.
+- **Consulter** le code source.
+- **Cloner et compiler** le logiciel pour votre usage personnel.
+- **Modifier** le code pour votre propre usage privé.
+- **Proposer des améliorations** via une pull request (l'auteur reste seul
+  décideur de leur intégration).
 
-Tous les droits sont réservés. Sauf autorisation écrite et préalable de l'auteur,
-il est **interdit** de :
+## Ce que vous NE POUVEZ PAS faire
 
-- copier, reproduire ou distribuer le Logiciel ou son code source, en tout ou
-  en partie ;
-- modifier, adapter, traduire ou créer des œuvres dérivées du Logiciel ;
-- revendre, louer, prêter ou exploiter commercialement le Logiciel ;
-- décompiler, désassembler ou pratiquer l'ingénierie inverse, sauf dans la
-  mesure expressément permise par la loi applicable.
+- **Redistribuer** le logiciel ou une version modifiée, sous quelque forme que
+  ce soit (binaire ou source), publiquement ou en privé.
+- **Republier** le code (ou une partie) sur un autre dépôt, site ou plateforme,
+  comme étant le vôtre ou non.
+- **Vendre, louer ou exploiter commercialement** le logiciel.
+- **Retirer ou modifier** les mentions de droit d'auteur et de paternité.
 
-L'utilisation personnelle du Logiciel par l'utilisateur final, à des fins de
-consultation de ses propres données scolaires, est autorisée.
+Toute autre utilisation nécessite l'accord écrit et préalable de l'auteur.
 
 ## Absence de garantie
 
-Le Logiciel est fourni « EN L'ÉTAT », sans garantie d'aucune sorte, expresse ou
+Le logiciel est fourni « EN L'ÉTAT », sans garantie d'aucune sorte, expresse ou
 implicite. L'auteur ne pourra être tenu responsable de tout dommage résultant de
-l'utilisation ou de l'impossibilité d'utiliser le Logiciel.
+son utilisation.
 
 ## Indépendance vis-à-vis d'EcoleDirecte
 
-MoyenneED Desktop est un projet **indépendant**, non affilié à EcoleDirecte ni à
-la société Aplim. Il se contente d'interroger l'API d'EcoleDirecte avec les
-identifiants fournis par l'utilisateur, pour calculer et afficher ses moyennes.
+MoyenneED Desktop est un projet **indépendant**, non affilié à EcoleDirecte. Il
+interroge l'API d'EcoleDirecte avec les identifiants fournis par l'utilisateur,
+uniquement pour calculer et afficher ses moyennes.
+
+---
+
+## English summary (non-binding)
+
+**Copyright © 2026 dev-zsm. All Rights Reserved.**
+
+This is a **source-available** project. You may view, clone, build, and modify
+the software for your own personal use, and submit pull requests. You may **not**
+redistribute, republish, sell, or remove the author's attribution. Any other use
+requires the author's prior written permission. Provided "as is", without
+warranty. Independent project, not affiliated with EcoleDirecte.
