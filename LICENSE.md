@@ -35,4 +35,3 @@ l'utilisation ou de l'impossibilité d'utiliser le Logiciel.
 MoyenneED Desktop est un projet **indépendant**, non affilié à EcoleDirecte ni à
 la société Aplim. Il se contente d'interroger l'API d'EcoleDirecte avec les
 identifiants fournis par l'utilisateur, pour calculer et afficher ses moyennes.
-« EcoleDirecte » est une marque de ses détenteurs respectifs.
