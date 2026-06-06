@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self';" />
+    <title>MoyenneED Desktop</title>
+    <link rel="stylesheet" href="renderer/style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <section class="view view-login" data-view="login" hidden>
+        <div class="card card-auth">
+          <div class="brand">
+            <img class="brand-logo" src="renderer/assets/logo.png" alt="MoyenneED Desktop" />
+            <h1>MoyenneED&nbsp;Desktop</h1>
+          </div>
+          <p class="muted">
+            Connectez votre session École Directe pour la récupération des
+            données pour la moyenne.
+          </p>
+
+          <form id="login-form" autocomplete="off">
+            <label>
+              <span>Identifiant</span>
+              <input
+                type="text"
+                id="login-username"
+                required
+                autocomplete="username"
+                spellcheck="false"
+              />
+            </label>
+            <label>
+              <span>Mot de passe</span>
+              <input
+                type="password"
+                id="login-password"
+                required
+                autocomplete="current-password"
+              />
+            </label>
+            <label class="row">
+              <input type="checkbox" id="login-remember" checked />
+              <span>Mémoriser la session (chiffrée)</span>
+            </label>
+
+            <div class="error" id="login-error" hidden></div>
+
+            <button type="submit" id="login-submit" class="btn btn-primary">
+              <span class="btn-label">Se connecter</span>
+              <span class="spinner" hidden></span>
+            </button>
+          </form>
+        </div>
+      </section>
+      <section class="view view-qcm" data-view="qcm" hidden>
+        <div class="card card-auth">
+          <div class="brand">
+            <img class="brand-logo" src="renderer/assets/logo.png" alt="MoyenneED Desktop" />
+            <h1>Vérification</h1>
+          </div>
+          <p class="muted">
+            EcoleDirecte demande une vérification supplémentaire.
+          </p>
+          <p class="qcm-question" id="qcm-question"></p>
+          <div class="qcm-options" id="qcm-options"></div>
+          <div class="error" id="qcm-error" hidden></div>
+          <button id="qcm-submit" class="btn btn-primary" disabled>
+            <span class="btn-label">Valider</span>
+            <span class="spinner" hidden></span>
+          </button>
+        </div>
+      </section>
+      <section class="view view-dashboard" data-view="dashboard" hidden>
+        <header class="topbar">
+          <div class="brand">
+            <strong>MoyenneED&nbsp;Desktop</strong>
+          </div>
+          <div class="topbar-right">
+            <div class="user-chip">
+              <span class="user-avatar" id="user-avatar"></span>
+              <span id="user-name"></span>
+            </div>
+            <button id="about-btn" class="btn btn-ghost icon-btn" title="À propos" aria-label="À propos">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+              </svg>
+            </button>
+            <button id="refresh-btn" class="btn btn-ghost icon-btn" title="Rafraîchir les notes" aria-label="Rafraîchir les notes">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-3-6.7" />
+                <path d="M21 4v5h-5" />
+              </svg>
+            </button>
+            <button id="logout-btn" class="btn btn-ghost">Déconnexion</button>
+          </div>
+        </header>
+
+        <div class="dashboard">
+          <aside class="periods">
+            <h2 class="section-title">Périodes</h2>
+            <nav id="periods-nav" class="periods-nav"></nav>
+          </aside>
+
+          <main class="content" id="content">
+            <div class="stats">
+              <div class="stat stat-main">
+                <div class="stat-label">Moyenne générale</div>
+                <div class="stat-value" id="stat-mm">—</div>
+                <div class="stat-sub">pondérée par les coefficients (calcul EcoleDirecte)</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Moyenne de la classe</div>
+                <div class="stat-value" id="stat-pond">—</div>
+                <div class="stat-sub" id="stat-pond-sub">moyenne générale de ta classe</div>
+              </div>
+              <div class="stat">
+                <div class="stat-label">Matières comptées</div>
+                <div class="stat-value" id="stat-count">—</div>
+                <div class="stat-sub">avec au moins une note</div>
+              </div>
+            </div>
+            <div class="chart-card" id="chart-card">
+              <div class="chart-head">
+                <span class="chart-title">Évolution de la moyenne</span>
+                <span class="chart-legend" id="chart-legend"></span>
+              </div>
+              <div class="chart-body" id="chart-body"></div>
+            </div>
+
+            <div class="content-head">
+              <h2 class="section-title">Matières</h2>
+              <div class="subjects-tools">
+                <input type="search" id="subject-search" class="subject-search"
+                  placeholder="Rechercher une matière…" />
+                <select id="subject-sort" class="subject-sort" title="Trier">
+                  <option value="default">Ordre EcoleDirecte</option>
+                  <option value="name">Nom (A→Z)</option>
+                  <option value="avg-desc">Moyenne ↓</option>
+                  <option value="avg-asc">Moyenne ↑</option>
+                  <option value="diff-desc">Écart classe ↓</option>
+                </select>
+              </div>
+            </div>
+            <div class="subjects" id="subjects"></div>
+          </main>
+        </div>
+      </section>
+      <div class="modal-overlay" id="about-overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
+          <button class="modal-close" id="about-close" aria-label="Fermer">✕</button>
+
+          <div class="about-header">
+            <img class="about-logo" src="renderer/assets/logo.png" alt="MoyenneED Desktop" />
+            <div>
+              <h2 class="about-name" id="about-title">MoyenneED Desktop</h2>
+              <span class="about-version" id="about-version">version 0.1.0</span>
+            </div>
+          </div>
+
+          <p class="about-intro">
+            Il n'existait aucune version de <strong>MoyenneED</strong> pour
+            calculer sa moyenne sur PC : toutes les apps existantes sont sur
+            mobile (Android / iOS). J'ai donc créé <strong>MoyenneED
+            Desktop</strong>, une application de bureau qui se connecte à
+            EcoleDirecte, récupère tes notes et calcule ta vraie moyenne, avec
+            les règles exactes d'EcoleDirecte.
+          </p>
+
+          <h3 class="about-subtitle">Fonctionnalités</h3>
+          <ul class="about-features">
+            <li><strong>Connexion EcoleDirecte</strong> sécurisée (gère la double authentification QCM).</li>
+            <li><strong>Calcul de la moyenne générale</strong> pondérée par les coefficients, comme EcoleDirecte.</li>
+            <li><strong>Moyenne de la classe</strong> et écart avec ta moyenne.</li>
+            <li><strong>Détail des notes</strong> par matière (coefficient, note de classe).</li>
+            <li><strong>Modifier une note</strong> : changer sa valeur, son coefficient, ou l'exclure du calcul.</li>
+            <li><strong>Exclure une matière entière</strong> du calcul d'un clic.</li>
+            <li><strong>Notes simulées</strong> : ajoute des notes fictives pour anticiper ta moyenne.</li>
+            <li><strong>Graphique d'évolution</strong> interactif comparant ta moyenne à celle de la classe.</li>
+            <li><strong>Recherche et tri</strong> des matières.</li>
+            <li><strong>Sélection automatique</strong> du trimestre en cours.</li>
+            <li><strong>Données chiffrées</strong> et stockées localement sur ton PC.</li>
+          </ul>
+
+          <div class="about-footer">
+            <div class="about-license">
+              <span class="about-license-tag">© 2026 — Tous droits réservés</span>
+              <span class="about-license-sub">All Rights Reserved</span>
+            </div>
+            <a class="about-author" id="about-author" href="#" title="Voir le GitHub">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.32 9.32 0 0 1 2.5-.34c.85 0 1.71.12 2.5.34 1.91-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.48-.01 2.82 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/>
+              </svg>
+              <span>dev-zsm</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast" hidden></div>
+    </main>
+
+    <script src="renderer/app.js"></script>
+  </body>
+</html>
