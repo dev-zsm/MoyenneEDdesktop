@@ -1,0 +1,50 @@
+{
+  "name": "moyenne-ed-desktop",
+  "version": "0.1.0",
+  "description": "Calcul de la moyenne des moyennes depuis EcoleDirecte",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "icons": "node build/scripts/gen-icons.js",
+    "stamp": "node build/scripts/stamp-icon.js",
+    "build": "npm run icons && electron-builder --win && npm run stamp",
+    "build:win": "npm run icons && electron-builder --win && npm run stamp",
+    "build:portable": "npm run icons && electron-builder --win portable && npm run stamp"
+  },
+  "author": "dev-zsm (https://github.com/dev-zsm)",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "electron": "^33.4.11",
+    "electron-builder": "^25.0.0",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^5.0.2"
+  },
+  "build": {
+    "appId": "com.minec.moyenneed",
+    "productName": "MoyenneED Desktop",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "renderer/**/*",
+      "index.html",
+      "build/icon.ico",
+      "LICENSE.md"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "dir",
+          "arch": "x64"
+        }
+      ]
+    }
+  }
+}
