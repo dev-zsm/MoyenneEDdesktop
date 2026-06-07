@@ -236,28 +236,38 @@ function showSkeleton() {
   ).join('');
 }
 
-async function refreshNotes() {
+async function refreshNotes(isRetry = false) {
   const refreshBtn = document.getElementById('refresh-btn');
   refreshBtn.disabled = true;
   if (state.periods.length === 0) showSkeleton();
   try {
     const res = await window.ed.fetchNotes(state.token, state.account.id);
     if (!res.ok) {
-      toast(res.error || 'Notes indisponibles');
-      if (res.error && /token/i.test(res.error)) {
-        await tryReloginFromStorage();
+      const tokenExpired =
+        res.expired || (res.error && /token/i.test(res.error));
+      if (tokenExpired && !isRetry) {
+        const reconnected = await silentRelogin();
+        if (reconnected) {
+          await refreshNotes(true);
+          return;
+        }
+        toast('Session expirée, reconnecte-toi');
+        return;
       }
+      toast(res.error || 'Notes indisponibles');
       return;
     }
     state.token = res.token || state.token;
     state.notes = res.data;
+    await persistToken();
     await recompute();
     if (!state.currentPeriodId && state.periods.length) {
       state.currentPeriodId = state.detectedPeriodId || state.periods[0].id;
     }
     renderPeriods();
     renderCurrentPeriod();
-    toast('Notes mises à jour');
+    if (isRetry) toast('Session renouvelée');
+    else toast('Notes mises à jour');
   } finally {
     refreshBtn.disabled = false;
   }
@@ -345,16 +355,28 @@ async function persistPrefs() {
   await window.store.save(saved);
 }
 
-async function tryReloginFromStorage() {
+async function silentRelogin() {
   const saved = await window.store.load();
-  if (!saved?.username || !saved?.password) return;
-  const res = await window.ed.login(saved.username, saved.password, null);
-  if (res.ok) {
-    state.token = res.token;
-    state.account = res.account;
-    await window.store.save({ ...saved, token: res.token });
-    await refreshNotes();
-  }
+  if (!saved?.username || !saved?.password) return false;
+  const fa = state.fa ? [state.fa] : saved.fa ? [saved.fa] : null;
+  try {
+    const res = await window.ed.login(saved.username, saved.password, fa);
+    if (res.ok) {
+      state.token = res.token;
+      state.account = res.account;
+      await persistToken();
+      return true;
+    }
+  } catch {}
+  return false;
+}
+
+async function persistToken() {
+  const saved = (await window.store.load()) || {};
+  saved.token = state.token;
+  saved.account = state.account;
+  if (state.fa) saved.fa = state.fa;
+  await window.store.save(saved);
 }
 
 function renderPeriods() {

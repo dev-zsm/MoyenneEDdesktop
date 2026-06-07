@@ -187,6 +187,7 @@ async function getNotes(token, eleveId) {
       ok: false,
       error: json.message || `Notes indisponibles (code ${json.code})`,
       code: json.code,
+      expired: json.code === 520 || json.code === 525,
     };
   }
   return { ok: true, token: json.token || token, data: json.data };
