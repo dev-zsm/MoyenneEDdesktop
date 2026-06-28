@@ -349,8 +349,19 @@ function computePeriod(periode, allMarks, excludedCodes = [], overrides = {}, si
   };
 }
 
+function isYearFinished(periods) {
+  const real = periods.filter((p) => !p.annuel);
+  if (!real.length) return false;
+  return real.every((p) => p.cloture);
+}
+
 function findCurrentPeriodId(periods) {
   if (!periods.length) return null;
+
+  if (isYearFinished(periods)) {
+    const annual = periods.find((p) => p.annuel);
+    if (annual) return annual.id;
+  }
 
   const real = periods.filter((p) => !p.annuel);
   const pool = real.length ? real : periods;
@@ -385,7 +396,11 @@ function computeAllPeriods(notesPayload, excludedCodes = [], overrides = {}, sim
   const periods = periodes
     .map((p) => computePeriod(p, notes, excludedCodes, overrides, simulated))
     .filter((p) => p.subjects.length > 0);
-  return { periods, currentPeriodId: findCurrentPeriodId(periods) };
+  return {
+    periods,
+    currentPeriodId: findCurrentPeriodId(periods),
+    yearFinished: isYearFinished(periods),
+  };
 }
 
 module.exports = {

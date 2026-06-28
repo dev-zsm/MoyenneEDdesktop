@@ -5,6 +5,7 @@ const state = {
   periods: [],
   currentPeriodId: null,
   detectedPeriodId: null,
+  yearFinished: false,
   pendingLogin: null,
   fa: null,
   excluded: new Set(),
@@ -283,6 +284,7 @@ async function recompute() {
   );
   state.periods = computed.periods;
   state.detectedPeriodId = computed.currentPeriodId || null;
+  state.yearFinished = !!computed.yearFinished;
 }
 
 async function toggleSubject(code) {
@@ -390,7 +392,8 @@ function renderPeriods() {
     const btn = document.createElement('button');
     btn.className = 'period-tab';
     if (p.id === state.currentPeriodId) btn.classList.add('active');
-    const isCurrent = p.id === state.detectedPeriodId;
+    const isCurrent =
+      !state.yearFinished && p.id === state.detectedPeriodId && !p.annuel;
     btn.innerHTML = `
       <span class="period-tab-label">
         <span class="period-tab-name"></span>
