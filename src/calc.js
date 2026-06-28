@@ -226,9 +226,10 @@ function computePeriod(periode, allMarks, excludedCodes = [], overrides = {}, si
   }
 
   const periodCode4 = (periode.codePeriode || '').substring(0, 4);
+  const isAnnual = !!periode.annuel;
   for (const raw of allMarks) {
     const mark = formatMark(raw, overrides);
-    if (mark.periodCode !== periodCode4) continue;
+    if (!isAnnual && mark.periodCode !== periodCode4) continue;
 
     const ts = mark.date ? new Date(mark.date).getTime() : null;
     mark._t = ts !== null && !isNaN(ts) ? ts : null;
@@ -351,23 +352,30 @@ function computePeriod(periode, allMarks, excludedCodes = [], overrides = {}, si
 function findCurrentPeriodId(periods) {
   if (!periods.length) return null;
 
-  const flagged = periods.find((p) => p.periodeActuelle && !p.annuel);
+  const real = periods.filter((p) => !p.annuel);
+  const pool = real.length ? real : periods;
+
+  const flagged = pool.find((p) => p.periodeActuelle);
   if (flagged) return flagged.id;
 
   const now = Date.now();
-  const byDate = periods.find((p) => {
-    if (p.annuel || !p.dateDebut || !p.dateFin) return false;
+  const byDate = pool.find((p) => {
+    if (!p.dateDebut || !p.dateFin) return false;
     const d1 = new Date(p.dateDebut).getTime();
     const d2 = new Date(p.dateFin).getTime();
     return !isNaN(d1) && !isNaN(d2) && now >= d1 && now <= d2;
   });
   if (byDate) return byDate.id;
 
-  const open = periods.find((p) => !p.cloture && !p.annuel);
+  const open = pool.find((p) => !p.cloture);
   if (open) return open.id;
 
-  const firstReal = periods.find((p) => !p.annuel);
-  return (firstReal || periods[0]).id;
+  const dated = pool
+    .filter((p) => p.dateDebut)
+    .sort((a, b) => new Date(b.dateDebut) - new Date(a.dateDebut));
+  if (dated.length) return dated[0].id;
+
+  return pool[pool.length - 1].id;
 }
 
 function computeAllPeriods(notesPayload, excludedCodes = [], overrides = {}, simulated = {}) {
